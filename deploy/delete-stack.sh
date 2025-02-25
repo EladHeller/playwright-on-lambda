@@ -1,0 +1,1 @@
+aws cloudformation delete-stack --stack-name $1 --region=il-central-1

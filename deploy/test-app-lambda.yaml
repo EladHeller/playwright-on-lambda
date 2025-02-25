@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Template to create lambda'
+Parameters:
+  DockerRepoName:
+    Type: String
+  CodeVersion:
+    Type: String
+
+
+Resources:
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+
+  MyLambdaFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      PackageType: Image
+      FunctionName: playwright-on-lambda-new
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ImageUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${DockerRepoName}:${CodeVersion}'
+      Timeout: 60
+      MemorySize: 1024

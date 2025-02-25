@@ -1,0 +1,1 @@
+aws cloudformation describe-stacks --region=il-central-1 --stack-name $1 --query 'Stacks[0].StackStatus' --output text
